@@ -1,3 +1,10 @@
+import os
+
+# Desactivar GPU y silenciar logs
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # Solo CPU
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"   # Oculta INFO y WARNING
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"  # Evita logs de optimización
+
 from tensorflow.keras.models import load_model
 from PIL import Image
 import numpy as np
@@ -9,7 +16,7 @@ classes = ['Benigno', 'Maligno']
 def predict_image_from_file(file_path):
     # Abrir y procesar la imagen en escala de grises
     img = Image.open(file_path).convert("L")  # Escala de grises
-    img = img.resize((200, 200))  # Asegúrate que coincida con el tamaño de entrenamiento
+    img = img.resize((200, 200))  # Ajustar al tamaño usado en el entrenamiento
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=-1)  # Añadir canal para grises
     img_array = np.expand_dims(img_array, axis=0)   # Añadir batch

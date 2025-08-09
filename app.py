@@ -1,8 +1,14 @@
+import os
+
+# Evitar que TensorFlow intente usar GPU y reducir logs
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # Solo CPU
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"   # Oculta INFO y WARNING
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"  # Desactiva optimizaciones con mensajes
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from model import predict_image_from_file
 import tempfile
-import os
 
 app = Flask(__name__)
 CORS(app)  # Permite llamadas desde otros orígenes (como localhost:3000)
@@ -37,7 +43,5 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-
